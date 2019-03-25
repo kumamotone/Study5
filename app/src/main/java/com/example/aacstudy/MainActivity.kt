@@ -36,44 +36,44 @@ class MainActivity : AppCompatActivity() {
             }
         }
         lifecycle.addObserver(lifecycleObserver)
-        println("onCreate : ${lifecycle.currentState.name}")
+        println("onCreate : ${lifecycle.currentState.name}") // onCreate : INITIALIZED <- 呼ばれ終わった後に変わる感じ
 
 //        startActivity(AnotherActivity.createIntent(applicationContext))
     }
 
     override fun onStart() {
         super.onStart()
-        println("onStart : ${lifecycle.currentState.name}")
+        println("onStart : ${lifecycle.currentState.name}") // onStart : CREATED
     }
 
     override fun onResume() {
         super.onResume()
-        println("onResume : ${lifecycle.currentState.name}")
+        println("onResume : ${lifecycle.currentState.name}") // onResume : STARTED
     }
 
     override fun onPause() {
         super.onPause()
-        println("onPause : ${lifecycle.currentState.name}")
+        println("onPause : ${lifecycle.currentState.name}") // onPause : STARTED
     }
 
     override fun onStop() {
         super.onStop()
-        println("onStop : ${lifecycle.currentState.name}")
+        println("onStop : ${lifecycle.currentState.name}") // onStop : CREATED
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        println("onDestroy : ${lifecycle.currentState.name}")
+        println("onDestroy : ${lifecycle.currentState.name}") // onDestroy : DESTROYED
     }
 
     override fun onRestart() {
         super.onRestart()
-        println("onRestart : ${lifecycle.currentState.name}")
+        println("onRestart : ${lifecycle.currentState.name}") // onRestart : CREATED
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        println("onSaveInstanceState : ${lifecycle.currentState.name}")
+        println("onSaveInstanceState : ${lifecycle.currentState.name}") // onSaveInstanceState : CREATED
     }
 }
 
