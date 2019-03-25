@@ -1,13 +1,40 @@
 package com.example.aacstudy
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 
-class MainViewModel : ViewModel()
+class MainViewModel : ViewModel() {
+    val countUpLiveData = CountUpLiveData()
+}
+
+class CountUpLiveData : LiveData<Int>() {
+    private var count = 0
+    private val handler = Handler()
+    private val r = Runnable {
+        count++
+        value = count
+        next()
+    }
+
+    private fun next() {
+        handler.postDelayed(r, 1000)
+    }
+
+    override fun onActive() {
+        next()
+    }
+
+    override fun onInactive() {
+        handler.removeCallbacks(r)
+    }
+}
 
 class MainFragment : Fragment() {
     companion object {
@@ -30,18 +57,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewModel1 = ViewModelProviders.of(this).get("1", MainViewModel::class.java)
-        val viewModel2 = ViewModelProviders.of(this).get("2", MainViewModel::class.java)
+        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        println("viewModel1: $viewModel1")
-        println("viewModel2: $viewModel2")
-
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .add(MainFragment.newInstance(1), "MainFragment21")
-                .add(MainFragment.newInstance(2), "MainFragment22")
-                .commit()
-        }
+        println("viewModel1: $viewModel")
+        viewModel.countUpLiveData.observe(this, Observer {
+            println(it)
+        })
     }
 }
 
@@ -76,3 +97,5 @@ class MainActivity : AppCompatActivity() {
 // key を通じて Activity Fragment 間での共有ができた
 // もちろん画面回転しても同じ
 
+// 課題 14.1
+// 画面回転したりバックグラウンドに移動しても値が保持される！
