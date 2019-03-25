@@ -16,27 +16,29 @@ class MainActivity : AppCompatActivity() {
         val lifecycleObserver = object : LifecycleObserver {
             @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
             fun onCreate(source: LifecycleOwner) {
-                println("ON_CREATE : ${source.lifecycle.currentState.name}")
+//                println("ON_CREATE : ${source.lifecycle.currentState.name}")
             }
 
             @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
             fun onAny(source: LifecycleOwner) {
-                println("ON_ANY : ${source.lifecycle.currentState.name}")
+//                println("ON_ANY : ${source.lifecycle.currentState.name}")
             }
 
             @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
             fun onStop(source: LifecycleOwner) {
-                println("ON_STOP : ${source.lifecycle.currentState.name}")
+//                println("ON_STOP : ${source.lifecycle.currentState.name}")
                 // source.lifecycle.removeObserver(this)
             }
 
             @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             fun onDestroy(source: LifecycleOwner) {
-                println("ON_DESTROY : ${source.lifecycle.currentState.name}")
+//                println("ON_DESTROY : ${source.lifecycle.currentState.name}")
             }
         }
         lifecycle.addObserver(lifecycleObserver)
         println("onCreate : ${lifecycle.currentState.name}")
+
+//        startActivity(AnotherActivity.createIntent(applicationContext))
     }
 
     override fun onStart() {
