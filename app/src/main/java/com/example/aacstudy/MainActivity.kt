@@ -2,10 +2,9 @@ package com.example.aacstudy
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,81 +12,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val lifecycleObserver = object : LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-            fun onCreate(source: LifecycleOwner) {
-//                println("ON_CREATE : ${source.lifecycle.currentState.name}")
-            }
+        val livedata = MutableLiveData<String>()
 
-            @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
-            fun onAny(source: LifecycleOwner) {
-//                println("ON_ANY : ${source.lifecycle.currentState.name}")
-            }
+        livedata.observe(this, Observer {
+            println(it)
+        })
 
-            @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-            fun onStop(source: LifecycleOwner) {
-//                println("ON_STOP : ${source.lifecycle.currentState.name}")
-                // source.lifecycle.removeObserver(this)
-            }
-
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            fun onDestroy(source: LifecycleOwner) {
-//                println("ON_DESTROY : ${source.lifecycle.currentState.name}")
-            }
+        button.setOnClickListener {
+            livedata.postValue("a")
+            livedata.postValue("b")
         }
-        lifecycle.addObserver(lifecycleObserver)
-        println("onCreate : ${lifecycle.currentState.name}") // onCreate : INITIALIZED <- 呼ばれ終わった後に変わる感じ
-
-//        startActivity(AnotherActivity.createIntent(applicationContext))
-    }
-
-    override fun onStart() {
-        super.onStart()
-        println("onStart : ${lifecycle.currentState.name}") // onStart : CREATED
-    }
-
-    override fun onResume() {
-        super.onResume()
-        println("onResume : ${lifecycle.currentState.name}") // onResume : STARTED
-    }
-
-    override fun onPause() {
-        super.onPause()
-        println("onPause : ${lifecycle.currentState.name}") // onPause : STARTED
-    }
-
-    override fun onStop() {
-        super.onStop()
-        println("onStop : ${lifecycle.currentState.name}") // onStop : CREATED
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        println("onDestroy : ${lifecycle.currentState.name}") // onDestroy : DESTROYED
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        println("onRestart : ${lifecycle.currentState.name}") // onRestart : CREATED
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        println("onSaveInstanceState : ${lifecycle.currentState.name}") // onSaveInstanceState : CREATED
     }
 }
 
+// 課題 5.1
+//2019-03-25 21:02:25.497 20625-20625/com.example.aacstudy I/System.out: a
+//2019-03-25 21:02:25.498 20625-20625/com.example.aacstudy I/System.out: b
 
-//2019-03-25 20:11:18.773 16858-16858/com.example.aacstudy I/System.out: onCreate : INITIALIZED
-//2019-03-25 20:11:18.782 16858-16858/com.example.aacstudy I/System.out: onStart : CREATED
-//2019-03-25 20:11:18.784 16858-16858/com.example.aacstudy I/System.out: onResume : STARTED
-//2019-03-25 20:11:28.573 16858-16858/com.example.aacstudy I/System.out: onPause : STARTED
-//2019-03-25 20:11:28.618 16858-16858/com.example.aacstudy I/System.out: onStop : CREATED
-//2019-03-25 20:11:28.624 16858-16858/com.example.aacstudy I/System.out: onSaveInstanceState : CREATED
-//2019-03-25 20:12:43.681 16858-16858/com.example.aacstudy I/System.out: onRestart : CREATED
-//2019-03-25 20:12:43.682 16858-16858/com.example.aacstudy I/System.out: onStart : CREATED
-//2019-03-25 20:12:43.686 16858-16858/com.example.aacstudy I/System.out: onResume : STARTED
-//2019-03-25 20:12:52.793 16858-16858/com.example.aacstudy I/System.out: onPause : STARTED
-//2019-03-25 20:12:52.835 16858-16858/com.example.aacstudy I/System.out: onStop : CREATED
-//2019-03-25 20:12:52.836 16858-16858/com.example.aacstudy I/System.out: onSaveInstanceState : CREATED
-//2019-03-25 20:12:54.081 16858-16858/com.example.aacstudy I/System.out: onDestroy : DESTROYED
+// 課題 5.2
+//2019-03-25 21:02:59.076 20759-20759/com.example.aacstudy I/System.out: b
+//2019-03-25 21:02:59.078 20759-20759/com.example.aacstudy I/System.out: a
+
+// 課題 5.3
+//2019-03-25 21:05:17.265 20996-20996/com.example.aacstudy I/System.out: b
+// a はドロップされてしまう
+
