@@ -1,10 +1,33 @@
 package com.example.aacstudy
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
+
+class CountUpLiveData : LiveData<Int>() {
+    private var count = 0
+    private val handler = Handler()
+    private val r = Runnable {
+        count++
+        value = count
+        next()
+    }
+
+    private fun next() {
+        handler.postDelayed(r, 1000)
+    }
+
+    override fun onActive() {
+        next()
+    }
+
+    override fun onInactive() {
+        handler.removeCallbacks(r)
+    }
+}
 
 private class MainLiveData : LiveData<String>() {
     override fun onActive() {
@@ -20,25 +43,21 @@ private class MainLiveData : LiveData<String>() {
 
 class MainActivity : AppCompatActivity() {
 
+    val livedata = CountUpLiveData()
+    private val observer = Observer<Int> { println("observeForever : $it") }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val livedata = MainLiveData()
-        button.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                livedata.observe(this, Observer<String> {
-                    println(it)
-                })
-            } else {
-                livedata.removeObservers(this)
-            }
-        }
-//        button {
-//            livedata.removeObserver(observer)
-//        }
-
+        livedata.observe(this, Observer { println(it) })
+        livedata.observeForever(observer)
 //        startActivity(AnotherActivity.createIntent(applicationContext))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        livedata.removeObserver(observer)
     }
 }
 
