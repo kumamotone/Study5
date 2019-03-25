@@ -5,7 +5,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.lifecycle.Transformations
 
 class CountUpLiveData : LiveData<Int>() {
     private var count = 0
@@ -50,8 +50,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        livedata.observe(this, Observer { println(it) })
-        livedata.observeForever(observer)
+        Transformations
+            .map(CountUpLiveData()) { it * it }
+            .observe(this, Observer { println(it) })
+//        livedata.observeForever(observer)
 //        startActivity(AnotherActivity.createIntent(applicationContext))
     }
 
